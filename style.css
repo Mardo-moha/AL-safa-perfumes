@@ -539,20 +539,3 @@ footer {
     padding: 1rem;
   }
 }
-@media (max-width: 768px) {
-  header {
-    position: sticky;
-    top: 0;
-    padding: 0.5rem 0;
-    transform: translateY(0);
-    transition: transform 0.3s ease;
-  }
-  
-  .header-hide {
-    transform: translateY(-100%);
-  }
-  
-  .header-show {
-    transform: translateY(0);
-  }
-}
