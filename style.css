@@ -492,72 +492,50 @@ footer {
 }
 
 /* ========== RESPONSIVE DESIGN ========== */
-@media (max-width: 1024px) {
-  :root {
-    --space-xl: 2rem;
-    --space-2xl: 3rem;
-  }
-  
-  nav ul {
-    gap: var(--space-lg);
-  }
-  
-  .about-section {
-    grid-template-columns: 1fr;
-  }
-  
-  .about-image {
-    min-height: 400px;
-    order: -1;
-  }
-}
-
 @media (max-width: 768px) {
-  :root {
-    --text-4xl: 2rem;
-    --text-3xl: 1.75rem;
-    --space-lg: 1.5rem;
+  header {
+    padding: 0.5rem 0; /* Reduzierter Abstand */
+    position: fixed; /* Fester Header beim Scrollen */
+    width: 100%;
+    top: 0;
+    transition: all 0.3s ease;
   }
-  
-  .header-container {
-    flex-direction: column;
-    gap: var(--space-md);
-  }
-  
-  nav ul {
-    margin: var(--space-md) 0;
-  }
-  
-  .hero {
-    height: 70vh;
-    min-height: 600px;
-    text-align: center;
-  }
-  
-  .hero-content {
-    padding: var(--space-xl);
-  }
-}
 
-@media (max-width: 480px) {
-  :root {
-    --text-xl: 1.1rem;
-    --text-lg: 1rem;
-    --space-md: 1rem;
+  /* Header wird kleiner beim Scrollen */
+  .header-scrolled {
+    padding: 0.3rem 0;
+    background-color: rgba(10, 10, 10, 0.95); /* Leichte Transparenz */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
   }
-  
+
+  .logo-container {
+    width: 120px; /* Kleinere Logo-Größe */
+  }
+
   nav ul {
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-sm);
+    gap: 1rem; /* Weniger Abstand zwischen Nav-Items */
   }
-  
-  .products-grid {
-    grid-template-columns: 1fr;
+
+  /* Burger-Menü für Mobile */
+  .mobile-menu-btn {
+    display: block; /* Burger-Button anzeigen */
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
   }
-  
-  .footer-grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-lg);
+
+  .main-nav {
+    display: none; /* Standard-Navigation ausblenden */
+  }
+
+  .main-nav.active {
+    display: block; /* Bei Klick anzeigen */
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background: var(--rich-black);
+    padding: 1rem;
   }
 }
