@@ -350,7 +350,7 @@ nav a:hover {
 }
 
 .about-image {
-  background: url('https://cdn.salla.sa/vBypv/JFagsM8fxWTkvAhftn9rkIcsJkcG5DAZtdOdrc1R.jpg') no-repeat center center/cover;
+  background: url('https://images.unsplash.com/photo-1615634262411-c4c32e857069') no-repeat center center/cover;
 }
 
 /* ========== FOOTER ========== */
@@ -538,27 +538,4 @@ footer {
     background: var(--rich-black);
     padding: 1rem;
   }
-}
-/* In style.css hinzufügen */
-.mobile-menu-btn {
-    display: none; /* Standardmäßig versteckt */
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.5rem;
-    cursor: pointer;
-}
-
-@media (max-width: 768px) {
-    .mobile-menu-btn {
-        display: block; /* Nur auf Mobile sichtbar */
-    }
-    
-    nav {
-        display: none; /* Standardmäßig versteckt */
-    }
-    
-    nav.active {
-        display: block; /* Bei Klick sichtbar */
-    }
 }
