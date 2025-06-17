@@ -539,3 +539,26 @@ footer {
     padding: 1rem;
   }
 }
+/* In style.css hinzufügen */
+.mobile-menu-btn {
+    display: none; /* Standardmäßig versteckt */
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .mobile-menu-btn {
+        display: block; /* Nur auf Mobile sichtbar */
+    }
+    
+    nav {
+        display: none; /* Standardmäßig versteckt */
+    }
+    
+    nav.active {
+        display: block; /* Bei Klick sichtbar */
+    }
+}
