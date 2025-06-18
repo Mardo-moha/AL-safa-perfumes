@@ -153,3 +153,27 @@ ${products}
     });
   }
 };
+// E-Mail senden (mit Fehlerbehandlung)
+try {
+  await emailjs.send(
+    'service_zasjwb2', // Service-ID
+    'template_mkj6lxm', // Template-ID
+    {
+      customer_name: `${formData.vorname} ${formData.nachname}`,
+      customer_email: formData.email,
+      order_number: bestellnummer,
+      order_items: cart.map(item => 
+        `${item.name} (${item.menge}x): ${item.preis.toFixed(2)}€`).join('<br>'),
+      total: (cart.reduce((sum, item) => sum + (item.preis * item.menge), 0) + 5.99).toFixed(2),
+      delivery_address: `
+        ${formData.strasse}<br>
+        ${formData.plz} ${formData.stadt}<br>
+        ${formData.land}
+      `
+    }
+  );
+  console.log("E-Mail erfolgreich gesendet!");
+} catch (emailError) {
+  console.error("E-Mail-Fehler:", emailError);
+  alert("Bestellung erhalten, aber E-Mail konnte nicht gesendet werden.");
+}
