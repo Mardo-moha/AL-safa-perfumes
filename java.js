@@ -1,18 +1,29 @@
-// script.js
+// java.js - Vollständige überarbeitete Version
 document.addEventListener('DOMContentLoaded', function() {
-    // Header kleiner beim Scrollen
+    // 1. Header Scroll-Verhalten
+    initHeaderScroll();
+    
+    // 2. Mobile Navigation
+    initMobileMenu();
+    
+    // 3. Warenkorb-System
+    initCartSystem();
+});
+
+// ==================== HEADER FUNKTIONALITÄT ====================
+function initHeaderScroll() {
     const header = document.getElementById('main-header');
+    if (!header) return;
+    
     let lastScroll = 0;
     
     window.addEventListener('scroll', function() {
         const currentScroll = window.pageYOffset;
         
         if (currentScroll > 100 && currentScroll > lastScroll) {
-            // Nach unten scrollen
             header.classList.add('header-scrolled');
             header.style.transform = 'translateY(-100%)';
         } else {
-            // Nach oben scrollen oder oben
             header.classList.add('header-scrolled');
             header.style.transform = 'translateY(0)';
         }
@@ -23,141 +34,158 @@ document.addEventListener('DOMContentLoaded', function() {
         
         lastScroll = currentScroll;
     });
+}
 
-    // Mobile Menü Toggle
+// ==================== MOBILE MENÜ ====================
+function initMobileMenu() {
     const menuBtn = document.querySelector('.mobile-menu-btn');
     const nav = document.querySelector('nav');
+    
+    if (!menuBtn || !nav) return;
     
     menuBtn.addEventListener('click', function() {
         nav.classList.toggle('active');
         this.classList.toggle('open');
     });
-});
-// java.js
-document.addEventListener('DOMContentLoaded', function() {
-    // Warenkorb initialisieren
-    let cart = JSON.parse(localStorage.getItem('alsafa-cart')) || [];
-    
-    // Event-Listener für alle "Zum Warenkorb"-Buttons
-    const addToCartButtons = document.querySelectorAll('.product-card .btn');
-    console.log(`${addToCartButtons.length} Warenkorb-Buttons gefunden`);
-    
-    addToCartButtons.forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const productCard = this.closest('.product-card');
-            const bgStyle = productCard.querySelector('.product-image').style.backgroundImage;
-            
-            const product = {
-                id: productCard.getAttribute('data-id') || `prod-${Date.now()}`,
-                name: productCard.querySelector('.product-name').textContent.trim(),
-                price: productCard.querySelector('.product-price').textContent
-                           .replace('€','')
-                           .replace('.','')
-                           .replace(',','.'),
-                image: bgStyle.substring(5, bgStyle.length - 2),
-                quantity: 1
-            };
-            
-            console.log("Produkt hinzugefügt:", product);
-            addToCart(product);
-        });
-    });
-    
-    function addToCart(product) {
-        const existingIndex = cart.findIndex(item => item.id === product.id);
-        
-        if(existingIndex >= 0) {
-            cart[existingIndex].quantity += 1;
-        } else {
-            cart.push(product);
-        }
-        
-        localStorage.setItem('alsafa-cart', JSON.stringify(cart));
-        updateCartCounter();
-        alert(`${product.name} wurde zum Warenkorb hinzugefügt!`);
-    }
-    
-    function updateCartCounter() {
-        const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-        document.querySelectorAll('.cart-count').forEach(el => {
-            el.textContent = count;
-        });
-        console.log("Warenkorb aktualisiert. Anzahl:", count);
-    }
-    
-    // Initialen Counter setzen
-    updateCartCounter();
-});
-// GLOBALE VARIABLEN
+}
+
+// ==================== WARENKORB SYSTEM ====================
 let cart = [];
 
-// INITIALISIERUNG
 function initCartSystem() {
     loadCart();
-    
-    // Nur auf Produktseiten Buttons hinzufügen
-    if (document.querySelector('.product-card')) {
-        setupAddToCartButtons();
-    }
-    
-    // Nur auf Warenkorb-Seite rendern
+    setupCartInteractions();
+    updateCartCounter();
+}
+
+function loadCart() {
+    const savedCart = localStorage.getItem('alsafa-cart');
+    cart = savedCart ? JSON.parse(savedCart) : [];
+}
+
+function saveCart() {
+    localStorage.setItem('alsafa-cart', JSON.stringify(cart));
+    updateCartCounter();
     if (document.getElementById('cart-items-container')) {
         renderCartItems();
     }
 }
 
-// BUTTONS INITIALISIEREN (MIT NULL-CHECK)
-function setupAddToCartButtons() {
-    const addButtons = document.querySelectorAll('.product-card .btn');
-    
-    if (addButtons.length > 0) {
-        addButtons.forEach(btn => {
+function setupCartInteractions() {
+    // Warenkorb-Buttons auf Produktseiten
+    if (document.querySelector('.product-card')) {
+        document.querySelectorAll('.product-card .btn').forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
                 addProductToCart(this);
             });
         });
     }
+    
+    // Entfernen-Buttons auf Warenkorb-Seite
+    if (document.getElementById('cart-items-container')) {
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-item')) {
+                removeFromCart(e.target.dataset.id);
+            }
+        });
+    }
 }
 
-// PRODUKT HINZUFÜGEN (MIT VALIDIERUNG)
 function addProductToCart(button) {
     const card = button.closest('.product-card');
-    
     if (!card) {
         console.error("Produktkarte nicht gefunden");
         return;
     }
 
     const product = {
-        id: card.getAttribute('data-id') || `prod-${Date.now()}`,
+        id: card.dataset.id || `prod-${Date.now()}`,
         name: card.querySelector('.product-name')?.textContent.trim() || "Unbekanntes Produkt",
-        price: parseFloat(card.querySelector('.product-price')?.textContent
-                   .replace('€','')
-                   .replace(',','.')) || 0,
-        image: extractBackgroundImage(card.querySelector('.product-image'))
+        price: parsePrice(card.querySelector('.product-price')?.textContent),
+        image: extractBackgroundImage(card.querySelector('.product-image')),
+        quantity: 1
     };
 
     addToCart(product);
+    showFeedback(`${product.name} wurde hinzugefügt`);
 }
 
-// HINTERGRUNDBILD EXTRAHIEREN
+function addToCart(product) {
+    const existingItem = cart.find(item => item.id === product.id);
+    
+    if (existingItem) {
+        existingItem.quantity++;
+    } else {
+        cart.push(product);
+    }
+    
+    saveCart();
+}
+
+function removeFromCart(id) {
+    cart = cart.filter(item => item.id !== id);
+    saveCart();
+}
+
+function renderCartItems() {
+    const container = document.getElementById('cart-items-container');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    let subtotal = 0;
+    
+    cart.forEach(item => {
+        subtotal += item.price * item.quantity;
+        
+        const itemElement = document.createElement('div');
+        itemElement.className = 'cart-item';
+        itemElement.innerHTML = `
+            <div class="cart-item-img" style="background-image: url('${item.image}')"></div>
+            <div class="cart-item-details">
+                <h4>${item.name}</h4>
+                <p>${formatPrice(item.price)} × ${item.quantity}</p>
+                <button class="remove-item" data-id="${item.id}">Entfernen</button>
+            </div>
+        `;
+        container.appendChild(itemElement);
+    });
+    
+    // Gesamtsumme aktualisieren
+    if (document.querySelector('.total-price')) {
+        const total = subtotal + 5.99; // Versandkosten
+        document.querySelector('.subtotal').textContent = formatPrice(subtotal);
+        document.querySelector('.total-price').textContent = formatPrice(total);
+    }
+}
+
+// ==================== HELPER FUNCTIONS ====================
+function updateCartCounter() {
+    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+    document.querySelectorAll('.cart-count').forEach(el => {
+        el.textContent = count;
+    });
+}
+
+function showFeedback(message) {
+    const feedback = document.createElement('div');
+    feedback.className = 'cart-feedback';
+    feedback.textContent = message;
+    document.body.appendChild(feedback);
+    setTimeout(() => feedback.remove(), 2000);
+}
+
+function parsePrice(priceString) {
+    if (!priceString) return 0;
+    return parseFloat(priceString.replace('€','').replace('.','').replace(',','.'));
+}
+
+function formatPrice(amount) {
+    return amount.toFixed(2).replace('.', ',') + '€';
+}
+
 function extractBackgroundImage(element) {
     if (!element) return '';
     const match = element.style.backgroundImage.match(/url\(["']?(.*?)["']?\)/);
     return match ? match[1] : '';
-}
-
-// RESTLICHE FUNKTIONEN UNVERÄNDERT (loadCart, addToCart, renderCartItems, etc.)
-
-// INITIALISIERUNG BEIM LADEN
-document.addEventListener('DOMContentLoaded', initCartSystem);
-if (document.querySelector('.product-card')) {
-    // Nur auf Produktseiten ausführen
-}
-if (!card) {
-    console.error("Produktkarte nicht gefunden");
-    return;
 }

@@ -3,117 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AL-SAFA | Warenkorb</title>
+    <title>AL-SAFA | Ihr Warenkorb</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Header mit Warenkorb-Counter -->
     <header id="main-header">
         <div class="container header-container">
-            
-            
             <div class="logo-container">
-                <!-- Geänderte Logo-Einbindung -->
                 <img src="logo2.jpg" alt="AL-SAFA Luxusparfüme" class="logo" onerror="this.style.display='none'">
             </div>
             
-            <nav>
+            <nav class="main-nav">
                 <ul>
-                    <li><a href="#">Heim</a></li>
-                    <li><a href="#kollektion">Kollektion</a></li>
-                    <li><a href="#handwerk">Handwerk</a></li>
-                    <li><a href="#atelier">Atelier</a></li>
-                    <li><a href="#kontakt">Kontakt</a></li>
+                    <li><a href="index.html">Heim</a></li>
+                    <li><a href="index.html#kollektion">Kollektion</a></li>
+                    <li><a href="index.html#handwerk">Handwerk</a></li>
+                    <li><a href="index.html#atelier">Atelier</a></li>
+                    <li><a href="index.html#kontakt">Kontakt</a></li>
                 </ul>
             </nav>
             
-            <div class="header-icons">
+            <div class="header-actions">
                 <a href="#suche" aria-label="Suche"><i class="fas fa-search"></i></a>
                 <a href="#konto" aria-label="Konto"><i class="fas fa-user"></i></a>
-                <a href="warenkorb.html" aria-label="Warenkorb"><i class="fas fa-shopping-bag"></i></a>
+                <a href="warenkorb.html" aria-label="Warenkorb" class="cart-icon">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count">0</span>
+                </a>
             </div>
         </div>
     </header>
 
+    <!-- Warenkorb Hauptinhalt -->
     <main class="cart-page">
-        <h1>Ihr Warenkorb</h1>
-        
-        <div class="cart-container">
-            <div class="cart-items">
-                <!-- Warenkorb-Inhalt wird via JavaScript eingefügt -->
-            </div>
+        <div class="container">
+            <h1 class="page-title">Ihr Warenkorb</h1>
             
-            <div class="cart-summary">
-                <h2>Zusammenfassung</h2>
-                <div class="summary-row">
-                    <span>Zwischensumme:</span>
-                    <span class="subtotal">0,00€</span>
-                </div>
-                <div class="summary-row">
-                    <span>Versand:</span>
-                    <span class="shipping">5,99€</span>
-                </div>
-                <div class="summary-row total">
-                    <span>Gesamt:</span>
-                    <span class="total-price">5,99€</span>
-                </div>
-                <a href="#kasse" class="btn checkout-btn">Zur Kasse gehen</a>
+            <div class="cart-grid">
+                <!-- Warenkorb Artikel -->
+                <section class="cart-items-section">
+                    <div class="cart-actions">
+                        <span id="item-count">0 Artikel</span>
+                        <button class="text-btn" id="clear-cart">Warenkorb leeren</button>
+                    </div>
+                    
+                    <div class="cart-items" id="cart-items-container">
+                        <!-- Dynamisch eingefügt via JavaScript -->
+                        <div class="empty-cart-message">
+                            <i class="fas fa-shopping-bag"></i>
+                            <p>Ihr Warenkorb ist leer</p>
+                            <a href="index.html#kollektion" class="btn">Zur Kollektion</a>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Bestellzusammenfassung -->
+                <aside class="cart-summary">
+                    <h2 class="summary-title">Bestellübersicht</h2>
+                    
+                    <div class="summary-details">
+                        <div class="summary-row">
+                            <span>Zwischensumme:</span>
+                            <span class="subtotal">0,00€</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Versand:</span>
+                            <span class="shipping">5,99€</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Gesamtsumme:</span>
+                            <span class="total-price">5,99€</span>
+                        </div>
+                    </div>
+                    
+                    <a href="#kasse" class="btn checkout-btn">Zur Kasse gehen</a>
+                    
+                    <div class="payment-methods">
+                        <p>Sicher bezahlen mit:</p>
+                        <div class="payment-icons">
+                            <i class="fab fa-cc-paypal"></i>
+                            <i class="fab fa-cc-visa"></i>
+                            <i class="fab fa-cc-mastercard"></i>
+                            <i class="fab fa-cc-apple-pay"></i>
+                        </div>
+                    </div>
+                </aside>
             </div>
         </div>
     </main>
 
+    <!-- Footer -->
     <footer>
-         <div class="container">
+        <div class="container">
             <div class="footer-grid">
-                <!-- Kollektionen -->
                 <div class="footer-column">
                     <h4>Kollektionen</h4>
                     <ul class="footer-links">
-                        <li><a href="#">Signature</a></li>
-                        <li><a href="#">Private Blend</a></li>
-                        <li><a href="#">Les Exclusifs</a></li>
-                        <li><a href="#">Archives</a></li>
+                        <li><a href="index.html#kollektion">Signature</a></li>
+                        <li><a href="index.html#kollektion">Private Blend</a></li>
+                        <li><a href="index.html#kollektion">Les Exclusifs</a></li>
+                        <li><a href="index.html#kollektion">Archives</a></li>
                     </ul>
                 </div>
                 
-                <!-- Service -->
                 <div class="footer-column">
                     <h4>Service</h4>
                     <ul class="footer-links">
                         <li><a href="#">Beratung</a></li>
                         <li><a href="#">Maßanfertigung</a></li>
                         <li><a href="#">Geschenkservice</a></li>
-                        <li><a href="#">Pflegehinweise</a></li>
+                        <li><a href="#">Retouren</a></li>
                     </ul>
                 </div>
                 
-                <!-- Kontakt -->
                 <div class="footer-column">
-                    <h4>Atelier</h4>
+                    <h4>Kontakt</h4>
                     <ul class="contact-info">
                         <li>
                             <i class="fas fa-phone"></i>
-                            <span>+4915560569138</span>
+                            <span>+49 155 60569138</span>
                         </li>
                         <li>
                             <i class="fas fa-envelope"></i>
                             <span>nassarmuhamad17@gmail.com</span>
                         </li>
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Parfümstraße 1, 10115 Berlin</span>
+                        </li>
                     </ul>
                 </div>
                 
-                <!-- Newsletter -->
                 <div class="footer-column">
-                    <h4>Verbunden bleiben</h4>
-                    <p>Abonnieren Sie unseren Newsletter für Einblicke in die Welt des Duftes.</p>
+                    <h4>Newsletter</h4>
                     <form class="newsletter-form">
                         <input type="email" class="newsletter-input" placeholder="Ihre E-Mail" required>
-                        <button type="submit" class="newsletter-btn">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
+                        <button type="submit" class="newsletter-btn">Anmelden</button>
                     </form>
                     <div class="social-links">
-                        <a href="https://www.instagram.com/al_safa_parfums?igsh=YWNyc3VwaHhlYTYy" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.instagram.com/al_safa_parfums" aria-label="Instagram" target="_blank">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest-p"></i></a>
                     </div>
                 </div>
             </div>
