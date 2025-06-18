@@ -141,4 +141,15 @@ ${products}
 
   } catch (error) {
     console.error('Kritischer Fehler:', {
-      error: error.message
+      error: error.message,
+      stack: error.stack,
+      request_body: req.body
+    });
+
+    return res.status(500).json({ 
+      error: 'Interner Serverfehler',
+      request_id: req.headers['x-vercel-id'],
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
