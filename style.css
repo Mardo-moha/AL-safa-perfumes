@@ -539,3 +539,35 @@ footer {
     padding: 1rem;
   }
 }
+
+
+
+.logo-container::before, 
+.logo-container::after {
+    content: none !important;
+    display: none !important;
+}
+/* Entfernt alle Pseudoelemente beim Logo */
+.header-container .logo-container:before,
+.header-container .logo-container:after {
+    content: "" !important;
+    display: none !important;
+}
+
+/* Sicherheitsabstand für SVG/IMG Logos */
+.logo-container img,
+.logo-container svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    pointer-events: none;
+}
+
+/* Falls es sich um einen Listenpunkt handelt */
+.header-container ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+.logo-container {
+    font-size: 0; /* Versteckt Textzeichen */
+}
