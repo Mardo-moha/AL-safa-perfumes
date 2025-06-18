@@ -83,3 +83,98 @@ function warenkorbZaehlerAktualisieren() {
         zaehler.innerText = total;
     }
 }
+// Bestellformular verarbeiten
+document.getElementById('checkout-form')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const order = {
+        customer: {
+            vorname: document.getElementById('vorname').value,
+            nachname: document.getElementById('nachname').value,
+            email: document.getElementById('email').value,
+            telefon: document.getElementById('telefon').value,
+            adresse: {
+                strasse: document.getElementById('strasse').value,
+                plz: document.getElementById('plz').value,
+                stadt: document.getElementById('stadt').value,
+                land: document.getElementById('land').value
+            }
+        },
+        items: JSON.parse(localStorage.getItem('alsafa-cart')) || [],
+        bestelldatum: new Date().toISOString(),
+        bestellnummer: 'AL-' + Date.now(),
+        status: 'Neu'
+    };
+
+    sendOrder(order);
+});
+
+// Bestellung speichern
+async function sendOrder(order) {
+    try {
+        // 1. EmailJS für E-Mail-Benachrichtigung (kostenlos)
+        if (typeof emailjs !== 'undefined') {
+            await emailjs.send('service_id', 'template_id', {
+                to_email: order.customer.email,
+                order_number: order.bestellnummer,
+                order_details: formatOrderDetails(order)
+            });
+        }
+
+        // 2. Google Forms als einfache Datenbank
+        await saveToGoogleForms(order);
+        
+        // 3. Local Storage als Fallback
+        const orders = JSON.parse(localStorage.getItem('alsafa-orders')) || [];
+        orders.push(order);
+        localStorage.setItem('alsafa-orders', JSON.stringify(orders));
+        
+        // Bestätigung anzeigen
+        document.getElementById('checkout-form').style.display = 'none';
+        document.getElementById('order-confirmation').style.display = 'block';
+        document.getElementById('order-number').textContent = order.bestellnummer;
+        document.getElementById('customer-email').textContent = order.customer.email;
+        
+        // Warenkorb leeren
+        localStorage.removeItem('alsafa-cart');
+        updateCartCounter();
+        
+    } catch (error) {
+        console.error("Fehler beim Senden der Bestellung:", error);
+        alert("Es gab ein Problem bei der Bestellung. Bitte versuchen Sie es später erneut.");
+    }
+}
+
+// Hilfsfunktion für Google Forms
+async function saveToGoogleForms(order) {
+    const formData = new FormData();
+    formData.append('entry.123456789', order.bestellnummer); // Feld-ID anpassen
+    formData.append('entry.987654321', JSON.stringify(order));
+    
+    await fetch('https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse', {
+        method: 'POST',
+        body: formData,
+        mode: 'no-cors'
+    });
+}
+
+function formatOrderDetails(order) {
+    let details = `Bestellung #${order.bestellnummer}\n\n`;
+    details += `Datum: ${new Date(order.bestelldatum).toLocaleString()}\n\n`;
+    details += "Artikel:\n";
+    
+    order.items.forEach(item => {
+        details += `- ${item.name} (${item.quantity}x ${item.price}€)\n`;
+    });
+    
+    details += `\nGesamt: ${calculateTotal(order.items)}€\n\n`;
+    details += `Kunde: ${order.customer.vorname} ${order.customer.nachname}\n`;
+    details += `Email: ${order.customer.email}\n`;
+    details += `Adresse: ${order.customer.adresse.strasse}, ${order.customer.adresse.plz} ${order.customer.adresse.stadt}, ${order.customer.adresse.land}`;
+    
+    return details;
+}
+
+function calculateTotal(items) {
+    return items.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2);
+}
