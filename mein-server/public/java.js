@@ -109,18 +109,3 @@ document.getElementById('checkout-form')?.addEventListener('submit', function(e)
     sendOrder(order);
 });
 
-document.getElementById("bestellenButton").addEventListener("click", () => {
-  fetch("/bestellen", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(warenkorb), // dein Warenkorb-Array
-  })
-  .then(res => res.json())
-  .then(data => {
-    alert("✅ Bestellung abgeschickt!");
-    warenkorb = [];
-    aktualisiereWarenkorbAnzeige();
-  });
-});
