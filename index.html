@@ -10,42 +10,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Header kleiner beim Scrollen
-            const header = document.getElementById('main-header');
-            let lastScroll = 0;
-            
-            window.addEventListener('scroll', function() {
-                const currentScroll = window.pageYOffset;
-                
-                if (currentScroll > 100 && currentScroll > lastScroll) {
-                    // Nach unten scrollen
-                    header.classList.add('header-scrolled');
-                    header.style.transform = 'translateY(-100%)';
-                } else {
-                    // Nach oben scrollen oder oben
-                    header.classList.add('header-scrolled');
-                    header.style.transform = 'translateY(0)';
-                }
-                
-                if (currentScroll < 50) {
-                    header.classList.remove('header-scrolled');
-                }
-                
-                lastScroll = currentScroll;
-            });
-
-            // Mobile Menü Toggle
-            const menuBtn = document.querySelector('.mobile-menu-btn');
-            const nav = document.querySelector('nav');
-            
-            menuBtn.addEventListener('click', function() {
-                nav.classList.toggle('active');
-                this.classList.toggle('open');
-            });
-        });
-    </script>
 </head>
 <body>
     <!-- Luxus Header mit Goldakzenten -->
@@ -58,7 +22,8 @@
             </button>
             
             <div class="logo-container">
-                <img src="logo2.jpg" alt="AL-SAFA Luxusparfüme" class="logo">
+                <!-- Geänderte Logo-Einbindung -->
+                <img src="logo2.jpg" alt="AL-SAFA Luxusparfüme" class="logo" onerror="this.style.display='none'">
             </div>
             
             <nav>
@@ -130,7 +95,7 @@
         <section id="handwerk" class="about-section">
             <div class="about-content">
                 <h2 class="section-title">Das Handwerk</h2>
-                <p>كتوب هون شي عن الماركة تبعك.</p>
+                <p>Seit 1985 vereint AL-SAFA die alte Kunst der Parfümerie mit moderner Sensibilität.</p>
                 <p>Über 200 natürliche Essenzen aus allen Kontinenten finden ihren Weg in unsere Kreationen - jede Flasche ein Unikat.</p>
                 <a href="#handwerk" class="btn">Mehr erfahren</a>
             </div>
@@ -200,8 +165,8 @@
             </div>
         </div>
     </footer>
-    <!-- Vor dem schließenden body-Tag -->
-<script src="java.js"></script>
-</body>
+
+    <!-- JavaScript am Ende einbinden -->
+    <script src="java.js"></script>
 </body>
 </html>
