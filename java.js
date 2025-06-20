@@ -116,3 +116,8 @@ document.getElementById('checkout-form')?.addEventListener('submit', async (e) =
 
 // Initialisierung
 updateCartDisplay();
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+const supabaseUrl = 'https://deinprojekt.supabase.co';
+const supabaseKey = 'dein_anon_key';
+const supabase = createClient(supabaseUrl, supabaseKey);
