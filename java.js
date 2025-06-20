@@ -1,73 +1,90 @@
-// Warenkorb-Funktionen
-let warenkorb = JSON.parse(localStorage.getItem('warenkorb')) || [];
+// Wenn Seite geladen ist
+document.addEventListener("DOMContentLoaded", () => {
+    warenkorbZaehlerAktualisieren(); // Zähler oben anzeigen
 
-function updateCartDisplay() {
-    // Warenkorb-Zähler oben aktualisieren
-    document.querySelectorAll('.cart-count').forEach(el => {
-        el.textContent = warenkorb.reduce((sum, p) => sum + p.menge, 0);
+    const buttons = document.querySelectorAll(".add-to-cart");
+    buttons.forEach(button => {
+        button.addEventListener("click", () => {
+            const produktCard = button.closest(".product-card");
+            const name = produktCard.querySelector(".product-name").innerText;
+            const preisText = produktCard.querySelector(".product-price").innerText;
+            const preis = parseFloat(preisText.replace("€", "").replace(",", "."));
+            const id = produktCard.getAttribute("data-id");
+
+            produktHinzufuegen(name, preis, id);
+        });
     });
 
-    // Warenkorb-Seite aktualisieren (falls wir auf warenkorb.html sind)
-    const cartContainer = document.getElementById('cart-items-container');
-    if (cartContainer) {
-        if (warenkorb.length === 0) {
-            cartContainer.innerHTML = `
-                <div class="empty-cart-message">
-                    <i class="fas fa-shopping-bag"></i>
-                    <p>Ihr Warenkorb ist leer</p>
-                    <a href="index.html#kollektion" class="btn">Zur Kollektion</a>
-                </div>`;
-        } else {
-            let html = '';
-            let gesamt = 0;
-            
-            warenkorb.forEach(p => {
-                const preis = p.preis * p.menge;
-                gesamt += preis;
-                html += `
-                    <div class="cart-item">
-                        <strong>${p.name}</strong><br>
-                        ${p.menge} x ${p.preis.toFixed(2)}€ = <strong>${preis.toFixed(2)}€</strong>
-                    </div>`;
-            });
+    // Dieser Bereich läuft nur auf warenkorb.html
+    const container = document.getElementById("cart-items-container");
+    if (container) {
+        const warenkorb = JSON.parse(localStorage.getItem("warenkorb")) || [];
 
-            cartContainer.innerHTML = html;
-            document.getElementById('item-count').textContent = `${warenkorb.length} Artikel`;
-            document.querySelector('.subtotal').textContent = `${gesamt.toFixed(2)}€`;
-            document.querySelector('.total-price').textContent = `${(gesamt + 5.99).toFixed(2)}€`;
+        const itemCount = document.getElementById("item-count");
+        const subtotalEl = document.querySelector(".subtotal");
+        const totalPriceEl = document.querySelector(".total-price");
+
+        if (warenkorb.length === 0) {
+            return; // Leere Nachricht bleibt sichtbar
+        }
+
+        container.innerHTML = "";
+
+        let gesamt = 0;
+
+        warenkorb.forEach(p => {
+            const eintrag = document.createElement("div");
+            eintrag.classList.add("cart-item");
+            const einzelpreis = (p.preis * p.menge).toFixed(2);
+            gesamt += parseFloat(einzelpreis);
+
+            eintrag.innerHTML = `
+                <strong>${p.name}</strong><br>
+                ${p.menge} x ${p.preis.toFixed(2)}€ = <strong>${einzelpreis}€</strong>
+            `;
+            container.appendChild(eintrag);
+        });
+
+        if (itemCount) itemCount.innerText = `${warenkorb.length} Artikel`;
+        if (subtotalEl) subtotalEl.innerText = `${gesamt.toFixed(2).replace(".", ",")}€`;
+        if (totalPriceEl) totalPriceEl.innerText = `${(gesamt + 5.99).toFixed(2).replace(".", ",")}€`;
+
+        warenkorbZaehlerAktualisieren();
+
+        const clearBtn = document.getElementById("clear-cart");
+        if (clearBtn) {
+            clearBtn.addEventListener("click", () => {
+                localStorage.removeItem("warenkorb");
+                location.reload();
+            });
         }
     }
+});
+
+function produktHinzufuegen(name, preis, id) {
+    const warenkorb = JSON.parse(localStorage.getItem("warenkorb")) || [];
+
+    const vorhanden = warenkorb.find(p => p.id === id);
+    if (vorhanden) {
+        vorhanden.menge++;
+    } else {
+        warenkorb.push({ id, name, preis, menge: 1 });
+    }
+
+    localStorage.setItem("warenkorb", JSON.stringify(warenkorb));
+    warenkorbZaehlerAktualisieren();
 }
 
-// Produkt hinzufügen
-document.querySelectorAll('.add-to-cart').forEach(button => {
-    button.addEventListener('click', () => {
-        const produkt = button.closest('.product-card');
-        const id = produkt.getAttribute('data-id');
-        const name = produkt.querySelector('.product-name').textContent;
-        const preis = parseFloat(produkt.querySelector('.product-price').textContent.replace('€', '').replace(',', '.'));
-
-        const vorhanden = warenkorb.find(p => p.id === id);
-        if (vorhanden) {
-            vorhanden.menge++;
-        } else {
-            warenkorb.push({ id, name, preis, menge: 1 });
-        }
-
-        localStorage.setItem('warenkorb', JSON.stringify(warenkorb));
-        updateCartDisplay();
-    });
-});
-
-// Warenkorb leeren
-document.getElementById('clear-cart')?.addEventListener('click', () => {
-    localStorage.removeItem('warenkorb');
-    warenkorb = [];
-    updateCartDisplay();
-});
-
-// Bestellung abschicken
-document.getElementById('checkout-form')?.addEventListener('submit', async (e) => {
+function warenkorbZaehlerAktualisieren() {
+    const warenkorb = JSON.parse(localStorage.getItem("warenkorb")) || [];
+    const total = warenkorb.reduce((summe, p) => summe + p.menge, 0);
+    const zaehler = document.getElementById("warenkorb-zaehler");
+    if (zaehler) {
+        zaehler.innerText = total;
+    }
+}
+// Bestellformular verarbeiten
+document.getElementById('checkout-form')?.addEventListener('submit', function(e) {
     e.preventDefault();
     
     const order = {
@@ -83,36 +100,12 @@ document.getElementById('checkout-form')?.addEventListener('submit', async (e) =
                 land: document.getElementById('land').value
             }
         },
-        items: warenkorb,
-        bestellnummer: 'AL-' + Date.now()
+        items: JSON.parse(localStorage.getItem('alsafa-cart')) || [],
+        bestelldatum: new Date().toISOString(),
+        bestellnummer: 'AL-' + Date.now(),
+        status: 'Neu'
     };
 
-    try {
-        const response = await fetch('/api/bestellung', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(order)
-        });
-        
-        const result = await response.json();
-        
-        if (result.success) {
-            // Bestätigung anzeigen
-            document.getElementById('order-number').textContent = order.bestellnummer;
-            document.getElementById('customer-email').textContent = order.customer.email;
-            document.getElementById('order-confirmation').style.display = 'block';
-            document.getElementById('checkout-form').style.display = 'none';
-            
-            // Warenkorb leeren
-            localStorage.removeItem('warenkorb');
-            warenkorb = [];
-            updateCartDisplay();
-        }
-    } catch (error) {
-        alert('Fehler beim Absenden der Bestellung');
-        console.error(error);
-    }
+    sendOrder(order);
 });
 
-// Initialisierung
-updateCartDisplay();

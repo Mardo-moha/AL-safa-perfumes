@@ -10,12 +10,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-<script>
-    emailjs.init('mardinmohamad236@gmail.com'); // Ersetzen mit Ihrer EmailJS User ID
-</script>
+    <script>
+        emailjs.init('dr6WH9zyJ271m0Lr5'); // Ersetze das mit deinem Public Key von EmailJS
+    </script>
 </head>
 <body>
-    <!-- Header mit Warenkorb-Counter -->
+    <!-- Header Bereich (unverändert) -->
     <header id="main-header">
         <div class="container header-container">
             <div class="logo-container">
@@ -38,7 +38,7 @@
                 <a href="warenkorb.html" aria-label="Warenkorb" class="cart-icon">
                     <i class="fas fa-shopping-bag"></i>
                     <span class="cart-count">0</span>
-                     <span id="warenkorb-zaehler" class="cart-count">0</span>
+                    <span id="warenkorb-zaehler" class="cart-count">0</span>
                 </a>
             </div>
         </div>
@@ -58,7 +58,6 @@
                     </div>
                     
                     <div class="cart-items" id="cart-items-container">
-                        <!-- Dynamisch eingefügt via JavaScript -->
                         <div class="empty-cart-message">
                             <i class="fas fa-shopping-bag"></i>
                             <p>Ihr Warenkorb ist leer</p>
@@ -86,48 +85,48 @@
                         </div>
                     </div>
                     
-                   <form id="checkout-form" class="checkout-form">
-    <h3>Kontaktinformationen</h3>
-    <div class="form-group">
-        <input type="text" id="vorname" name="vorname" placeholder="Vorname" required>
-    </div>
-    <div class="form-group">
-        <input type="text" id="nachname" name="nachname" placeholder="Nachname" required>
-    </div>
-    <div class="form-group">
-        <input type="email" id="email" name="email" placeholder="E-Mail" required>
-    </div>
-    <div class="form-group">
-        <input type="tel" id="telefon" name="telefon" placeholder="Telefon">
-    </div>
+                    <form id="checkout-form" class="checkout-form">
+                        <h3>Kontaktinformationen</h3>
+                        <div class="form-group">
+                            <input type="text" id="vorname" name="vorname" placeholder="Vorname" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="nachname" name="nachname" placeholder="Nachname" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" name="email" placeholder="E-Mail" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" id="telefon" name="telefon" placeholder="Telefon">
+                        </div>
 
-    <h3>Lieferadresse</h3>
-    <div class="form-group">
-        <input type="text" id="strasse" name="strasse" placeholder="Straße und Hausnummer" required>
-    </div>
-    <div class="form-group">
-        <input type="text" id="plz" name="plz" placeholder="PLZ" required>
-    </div>
-    <div class="form-group">
-        <input type="text" id="stadt" name="stadt" placeholder="Stadt" required>
-    </div>
-    <div class="form-group">
-        <select id="land" name="land" required>
-            <option value="">Land auswählen</option>
-            <option value="DE">Deutschland</option>
-            <option value="AT">Österreich</option>
-            <option value="CH">Schweiz</option>
-        </select>
-    </div>
+                        <h3>Lieferadresse</h3>
+                        <div class="form-group">
+                            <input type="text" id="strasse" name="strasse" placeholder="Straße und Hausnummer" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="plz" name="plz" placeholder="PLZ" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="stadt" name="stadt" placeholder="Stadt" required>
+                        </div>
+                        <div class="form-group">
+                            <select id="land" name="land" required>
+                                <option value="">Land auswählen</option>
+                                <option value="DE">Deutschland</option>
+                                <option value="AT">Österreich</option>
+                                <option value="CH">Schweiz</option>
+                            </select>
+                        </div>
 
-    <button type="submit" class="btn checkout-btn">Bestellung abschließen</button>
-</form>
+                        <button type="submit" class="btn checkout-btn">Bestellung abschließen</button>
+                    </form>
 
-<div id="order-confirmation" style="display:none;">
-    <h2>Vielen Dank für Ihre Bestellung!</h2>
-    <p>Wir haben Ihre Bestellung #<span id="order-number"></span> erhalten.</p>
-    <p>Eine Bestätigung wurde an <span id="customer-email"></span> gesendet.</p>
-</div>
+                    <div id="order-confirmation" style="display:none;">
+                        <h2>Vielen Dank für Ihre Bestellung!</h2>
+                        <p>Wir haben Ihre Bestellung #<span id="order-number"></span> erhalten.</p>
+                        <p>Eine Bestätigung wurde an <span id="customer-email"></span> gesendet.</p>
+                    </div>
                     
                     <div class="payment-methods">
                         <p>Sicher bezahlen mit:</p>
@@ -207,6 +206,130 @@
         </div>
     </footer>
 
-    <script src="java.js"></script>
+    <script>
+        // Warenkorb-Logik
+        document.addEventListener('DOMContentLoaded', function() {
+            let cart = JSON.parse(localStorage.getItem('warenkorb')) || [];
+            const cartContainer = document.getElementById('cart-items-container');
+            const itemCountElement = document.getElementById('item-count');
+            const subtotalElement = document.querySelector('.subtotal');
+            const totalPriceElement = document.querySelector('.total-price');
+            const cartCountElements = document.querySelectorAll('.cart-count');
+
+            // Warenkorb anzeigen
+            function updateCartDisplay() {
+                if (cart.length === 0) {
+                    cartContainer.innerHTML = `
+                        <div class="empty-cart-message">
+                            <i class="fas fa-shopping-bag"></i>
+                            <p>Ihr Warenkorb ist leer</p>
+                            <a href="index.html#kollektion" class="btn">Zur Kollektion</a>
+                        </div>`;
+                } else {
+                    let html = '';
+                    let gesamt = 0;
+                    
+                    cart.forEach(item => {
+                        const preis = item.preis * item.menge;
+                        gesamt += preis;
+                        html += `
+                            <div class="cart-item">
+                                <strong>${item.name}</strong><br>
+                                ${item.menge} x ${item.preis.toFixed(2)}€ = <strong>${preis.toFixed(2)}€</strong>
+                            </div>`;
+                    });
+
+                    cartContainer.innerHTML = html;
+                    itemCountElement.textContent = `${cart.length} Artikel`;
+                    subtotalElement.textContent = `${gesamt.toFixed(2)}€`;
+                    totalPriceElement.textContent = `${(gesamt + 5.99).toFixed(2)}€`;
+                }
+
+                const totalItems = cart.reduce((sum, item) => sum + item.menge, 0);
+                cartCountElements.forEach(el => el.textContent = totalItems);
+            }
+
+            // Warenkorb leeren
+            document.getElementById('clear-cart')?.addEventListener('click', function() {
+                localStorage.removeItem('warenkorb');
+                cart = [];
+                updateCartDisplay();
+            });
+
+            // Bestellung abschließen
+            document.getElementById('checkout-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Formulardaten sammeln
+                const formData = {
+                    vorname: document.getElementById('vorname').value,
+                    nachname: document.getElementById('nachname').value,
+                    email: document.getElementById('email').value,
+                    telefon: document.getElementById('telefon').value,
+                    strasse: document.getElementById('strasse').value,
+                    plz: document.getElementById('plz').value,
+                    stadt: document.getElementById('stadt').value,
+                    land: document.getElementById('land').value
+                };
+
+                // Bestellnummer generieren
+                const bestellnummer = 'AL-' + Date.now();
+
+                try {
+                    // 1. An deine API senden (für Telegram)
+                    const response = await fetch('/api/bestellung', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            customer: formData,
+                            items: cart,
+                            bestellnummer: bestellnummer
+                        })
+                    });
+
+                    if (!response.ok) throw new Error('API-Fehler');
+
+                    // 2. E-Mail-Bestätigung senden
+                    const emailParams = {
+                        customer_name: `${formData.vorname} ${formData.nachname}`,
+                        customer_email: formData.email,
+                        order_number: bestellnummer,
+                        order_items: cart.map(item => 
+                            `${item.name} (${item.menge}x): ${item.preis.toFixed(2)}€`).join('<br>'),
+                        total: (cart.reduce((sum, item) => sum + (item.preis * item.menge), 0) + 5.99).toFixed(2),
+                        delivery_address: `
+                            ${formData.strasse}<br>
+                            ${formData.plz} ${formData.stadt}<br>
+                            ${formData.land}
+                        `
+                    };
+
+                    await emailjs.send(
+                        'service_zasjwb2', // Ersetze mit deiner Service-ID
+                        'template_mkj6lxm', // Ersetze mit deiner Template-ID
+                        emailParams
+                    );
+
+                    // Erfolgsmeldung anzeigen
+                    document.getElementById('checkout-form').style.display = 'none';
+                    document.getElementById('order-confirmation').style.display = 'block';
+                    document.getElementById('order-number').textContent = bestellnummer;
+                    document.getElementById('customer-email').textContent = formData.email;
+                    
+                    // Warenkorb leeren
+                    localStorage.removeItem('warenkorb');
+                    cart = [];
+                    updateCartDisplay();
+
+                } catch (error) {
+                    console.error('Fehler:', error);
+                    alert('Bestellung fehlgeschlagen! Bitte versuchen Sie es später erneut.');
+                }
+            });
+
+            // Initialisierung
+            updateCartDisplay();
+        });
+    </script>
 </body>
 </html>
