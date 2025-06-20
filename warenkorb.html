@@ -206,130 +206,46 @@
         </div>
     </footer>
 
-    <script>
-        // Warenkorb-Logik
-        document.addEventListener('DOMContentLoaded', function() {
-            let cart = JSON.parse(localStorage.getItem('warenkorb')) || [];
-            const cartContainer = document.getElementById('cart-items-container');
-            const itemCountElement = document.getElementById('item-count');
-            const subtotalElement = document.querySelector('.subtotal');
-            const totalPriceElement = document.querySelector('.total-price');
-            const cartCountElements = document.querySelectorAll('.cart-count');
-
-            // Warenkorb anzeigen
-            function updateCartDisplay() {
-                if (cart.length === 0) {
-                    cartContainer.innerHTML = `
-                        <div class="empty-cart-message">
-                            <i class="fas fa-shopping-bag"></i>
-                            <p>Ihr Warenkorb ist leer</p>
-                            <a href="index.html#kollektion" class="btn">Zur Kollektion</a>
-                        </div>`;
-                } else {
-                    let html = '';
-                    let gesamt = 0;
-                    
-                    cart.forEach(item => {
-                        const preis = item.preis * item.menge;
-                        gesamt += preis;
-                        html += `
-                            <div class="cart-item">
-                                <strong>${item.name}</strong><br>
-                                ${item.menge} x ${item.preis.toFixed(2)}€ = <strong>${preis.toFixed(2)}€</strong>
-                            </div>`;
-                    });
-
-                    cartContainer.innerHTML = html;
-                    itemCountElement.textContent = `${cart.length} Artikel`;
-                    subtotalElement.textContent = `${gesamt.toFixed(2)}€`;
-                    totalPriceElement.textContent = `${(gesamt + 5.99).toFixed(2)}€`;
-                }
-
-                const totalItems = cart.reduce((sum, item) => sum + item.menge, 0);
-                cartCountElements.forEach(el => el.textContent = totalItems);
-            }
-
-            // Warenkorb leeren
-            document.getElementById('clear-cart')?.addEventListener('click', function() {
-                localStorage.removeItem('warenkorb');
-                cart = [];
-                updateCartDisplay();
-            });
-
-            // Bestellung abschließen
-            document.getElementById('checkout-form').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                // Formulardaten sammeln
-                const formData = {
-                    vorname: document.getElementById('vorname').value,
-                    nachname: document.getElementById('nachname').value,
-                    email: document.getElementById('email').value,
-                    telefon: document.getElementById('telefon').value,
-                    strasse: document.getElementById('strasse').value,
-                    plz: document.getElementById('plz').value,
-                    stadt: document.getElementById('stadt').value,
-                    land: document.getElementById('land').value
-                };
-
-                // Bestellnummer generieren
-                const bestellnummer = 'AL-' + Date.now();
-
-                try {
-                    // 1. An deine API senden (für Telegram)
-                    const response = await fetch('/api/bestellung', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            customer: formData,
-                            items: cart,
-                            bestellnummer: bestellnummer
-                        })
-                    });
-
-                    if (!response.ok) throw new Error('API-Fehler');
-
-                    // 2. E-Mail-Bestätigung senden
-                    const emailParams = {
-                        customer_name: `${formData.vorname} ${formData.nachname}`,
-                        customer_email: formData.email,
-                        order_number: bestellnummer,
-                        order_items: cart.map(item => 
-                            `${item.name} (${item.menge}x): ${item.preis.toFixed(2)}€`).join('<br>'),
-                        total: (cart.reduce((sum, item) => sum + (item.preis * item.menge), 0) + 5.99).toFixed(2),
-                        delivery_address: `
-                            ${formData.strasse}<br>
-                            ${formData.plz} ${formData.stadt}<br>
-                            ${formData.land}
-                        `
-                    };
-
-                    await emailjs.send(
-                        'service_zasjwb2', // Ersetze mit deiner Service-ID
-                        'template_mkj6lxm', // Ersetze mit deiner Template-ID
-                        emailParams
-                    );
-
-                    // Erfolgsmeldung anzeigen
-                    document.getElementById('checkout-form').style.display = 'none';
-                    document.getElementById('order-confirmation').style.display = 'block';
-                    document.getElementById('order-number').textContent = bestellnummer;
-                    document.getElementById('customer-email').textContent = formData.email;
-                    
-                    // Warenkorb leeren
-                    localStorage.removeItem('warenkorb');
-                    cart = [];
-                    updateCartDisplay();
-
-                } catch (error) {
-                    console.error('Fehler:', error);
-                    alert('Bestellung fehlgeschlagen! Bitte versuchen Sie es später erneut.');
-                }
-            });
-
-            // Initialisierung
-            updateCartDisplay();
+   <script>
+  document.getElementById('checkout-form')?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = {
+        vorname: document.getElementById('vorname').value,
+        nachname: document.getElementById('nachname').value,
+        email: document.getElementById('email').value,
+        telefon: document.getElementById('telefon').value,
+        strasse: document.getElementById('strasse').value,
+        plz: document.getElementById('plz').value,
+        stadt: document.getElementById('stadt').value,
+        land: document.getElementById('land').value
+    };
+    const bestellnummer = 'AL-' + Date.now();
+    try {
+        const response = await fetch('/api/bestellung', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                customer: {
+                    vorname: formData.vorname,
+                    nachname: formData.nachname,
+                    email: formData.email,
+                    telefon: formData.telefon,
+                    adresse: {
+                        strasse: formData.strasse,
+                        plz: formData.plz,
+                        stadt: formData.stadt,
+                        land: formData.land
+                    }
+                },
+                items: JSON.parse(localStorage.getItem('warenkorb')) || [],
+                bestellnummer: bestellnummer
+            })
         });
-    </script>
+        if (!response.ok) throw new Error('API-Fehler');
+    } catch (error) {
+        console.error('Fehler:', error);
+    }
+  });
+</script>
 </body>
 </html>
