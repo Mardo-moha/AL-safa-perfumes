@@ -100,7 +100,7 @@ document.getElementById('checkout-form')?.addEventListener('submit', function(e)
                 land: document.getElementById('land').value
             }
         },
-        items: JSON.parse(localStorage.getItem('alsafa-cart')) || [],
+       items: JSON.parse(localStorage.getItem('warenkorb')) || [],
         bestelldatum: new Date().toISOString(),
         bestellnummer: 'AL-' + Date.now(),
         status: 'Neu'
