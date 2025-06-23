@@ -117,7 +117,7 @@
 
     .particle {
       position: absolute;
-      width: 60px;
+      width: 85px;
       height: auto;
       opacity: 0.5;
       animation: float 15s linear infinite;
@@ -169,7 +169,7 @@
         msgElement.textContent = messages[index];
         msgElement.style.animation = "none";
         void msgElement.offsetWidth; // reset animation
-        msgElement.style.animation = "fadeSlide 0.5s ease forwards";
+        msgElement.style.animation = "fadeSlide 0.3s ease forwards";
         index = (index + 1) % messages.length;
       }, 300);
     }
