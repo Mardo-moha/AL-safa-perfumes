@@ -1,44 +1,97 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wartung</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wartung | Al-Safa Perfumes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Open+Sans&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
       padding: 0;
-      background: #111;
-      color: #fff;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #0b0b0b;
+      color: #f8f8f8;
+      font-family: 'Open Sans', sans-serif;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       height: 100vh;
       text-align: center;
-    }
-
-    h1 {
-      font-size: 3em;
-      margin-bottom: 0.5em;
-    }
-
-    p {
-      font-size: 1.2em;
-      color: #bbb;
+      overflow: hidden;
     }
 
     .logo {
-      width: 150px;
+      width: 100px;
       margin-bottom: 20px;
-      opacity: 0.8;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5em;
+      margin-bottom: 0.5em;
+    }
+
+    .message {
+      font-size: 1.2em;
+      color: #ccc;
+      margin-bottom: 20px;
+      height: 1.4em;
+    }
+
+    .loader {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #444;
+      border-top: 4px solid #d4af37;
+      border-radius: 50%;
+      animation: spin 1.2s linear infinite;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 20px;
+      font-size: 0.9em;
+      color: #666;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
     }
   </style>
 </head>
 <body>
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Warning_icon.svg/1200px-Warning_icon.svg.png" alt="Wartung" class="logo">
-  <h1>Wartungsarbeiten</h1>
-  <p>Unsere Website ist vorübergehend nicht verfügbar.<br>Bitte besuchen Sie uns später wieder.</p>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Warning_icon.svg/1200px-Warning_icon.svg.png" alt="Wartung" class="logo" />
+  <h1>Al-Safa Perfumes</h1>
+
+  <div class="message" id="adMessage">Wartungsarbeiten…</div>
+
+  <div class="loader"></div>
+
+  <footer>© 2025 Al-Safa Perfumes. Alle Rechte vorbehalten.</footer>
+
+  <script>
+    const messages = [
+      "Wartungsarbeiten…",
+      "Wir sind bald wieder da…",
+      "Al-Safa Perfumes – Die Alchemie des Duftes",
+      "Verfeinerte Düfte, neu präsentiert…",
+      "Bleiben Sie gespannt auf unser Update!"
+    ];
+
+    let index = 0;
+    const msgElement = document.getElementById("adMessage");
+
+    setInterval(() => {
+      index = (index + 1) % messages.length;
+      msgElement.style.opacity = 0;
+      setTimeout(() => {
+        msgElement.textContent = messages[index];
+        msgElement.style.opacity = 1;
+      }, 300);
+    }, 3000); // alle 3 Sekunden wechseln
+  </script>
 </body>
 </html>
