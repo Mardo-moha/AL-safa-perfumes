@@ -108,8 +108,8 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
+      width: 200%;
+      height: 200%;
       overflow: hidden;
       z-index: 1;
       pointer-events: none;
@@ -117,7 +117,7 @@
 
     .particle {
       position: absolute;
-      width: 30px;
+      width: 60px;
       height: auto;
       opacity: 0.5;
       animation: float 15s linear infinite;
@@ -178,7 +178,7 @@
 
     // 💠 Partikel-Animation: Parfümflaschen
     const particleContainer = document.getElementById('particles');
-    const perfumeURL = "par.jpg"; // Parfümflasche Icon
+    const perfumeURL = "icon.png"; // Parfümflasche Icon
 
     for (let i = 0; i < 20; i++) {
       const img = document.createElement("img");
