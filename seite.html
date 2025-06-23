@@ -1,183 +1,195 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AL-SAFA | Exklusive Parfümkollektion</title>
-    <meta name="description" content="Meisterhafte Duftkompositionen aus den feinsten Essenzen - entdecken Sie die AL-SAFA Kollektion">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wartung | Al-Safa Perfumes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Open+Sans&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0b0b0b;
+      color: #f8f8f8;
+      font-family: 'Open Sans', sans-serif;
+      overflow: hidden;
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      height: 100vh;
+      padding: 20px;
+    }
+
+    .logo {
+      width: 100px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5em;
+      margin-bottom: 0.5em;
+      position: relative;
+      overflow: hidden;
+    }
+
+    h1::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -75%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.5), transparent);
+      transform: skewX(-25deg);
+      animation: shine 3s infinite;
+    }
+
+    @keyframes shine {
+      0% { left: -75%; }
+      100% { left: 125%; }
+    }
+
+    .message {
+      font-size: 1.2em;
+      color: #ccc;
+      margin-bottom: 20px;
+      height: 1.4em;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeSlide 0.5s ease forwards;
+    }
+
+    .loader {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #444;
+      border-top: 4px solid #d4af37;
+      border-radius: 50%;
+      animation: spin 1.2s linear infinite;
+      margin-top: 10px;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 0.9em;
+      color: #666;
+      z-index: 2;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes fadeSlide {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 🎆 Partikel (Parfümflaschen) */
+    .particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      width: 30px;
+      height: auto;
+      opacity: 0.5;
+      animation: float 15s linear infinite;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.5;
+      }
+      100% {
+        transform: translateY(-200px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
 </head>
 <body>
-    <!-- Luxus Header mit Goldakzenten -->
-    <header id="main-header">
-        <div class="container header-container">
-            <div class="logo-container">
-                <img src="logo2.jpg" alt="AL-SAFA Luxusparfüme" class="logo" onerror="this.style.display='none'">
-            </div>
-            
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="#">Heim</a></li>
-                    <li><a href="#kollektion">Kollektion</a></li>
-                    <li><a href="#handwerk">Handwerk</a></li>
-                    <li><a href="#atelier">Atelier</a></li>
-                    <li><a href="#kontakt">Kontakt</a></li>
-                </ul>
-            </nav>
-            
-            <div class="header-actions">
-                <a href="#suche" aria-label="Suche"><i class="fas fa-search"></i></a>
-                <a href="#konto" aria-label="Konto"><i class="fas fa-user"></i></a>
-                <a href="warenkorb.html" aria-label="Warenkorb" class="cart-icon">
-                    <i class="fas fa-shopping-bag"></i>
-                    <span class="cart-count">0</span>
-                    <span id="warenkorb-zaehler" class="cart-count">0</span>
-                </a>
-            </div>
-        </div>
-    </header>
+  <!-- 🎆 Partikel im Hintergrund -->
+  <div class="particles" id="particles"></div>
 
-    <!-- Hero-Bereich mit Duftkomposition -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Die Alchemie des Duftes</h1>
-            <p>Jede Flasche erzählt die Geschichte seltener Essenzen und meisterhafter Komposition</p>
-            <a href="#kollektion" class="btn">Entdecken Sie die Kollektion</a>
-        </div>
-    </section>
+  <div class="container">
+    <img src="par.jpg" alt="Wartung" class="logo" />
+    <h1>Al-Safa Perfumes</h1>
+    <div class="message" id="adMessage">Wartungsarbeiten…</div>
+    <div class="loader"></div>
+  </div>
 
-    <!-- Hauptinhalt -->
-    <main>
-        <!-- Signature Düfte -->
-        <section id="kollektion" class="featured">
-            <div class="container">
-                <h2 class="section-title">Unsere Signaturen</h2>
-                
-                <div class="products-grid">
-                    <!-- Duft 1 -->
-                    <article class="product-card" data-id="nuit-doree">
-                        <div class="product-image" style="background-image: url('par.jpg')"></div>
-                        <div class="product-info">
-                            <h3 class="product-name">Nuit Dorée</h3>
-                            <p class="product-description">Vanille · Amber · Patschuli</p>
-                            <div class="product-footer">
-                                <span class="product-price">149,00€</span>
-                                <button class="btn add-to-cart">Zum Warenkorb</button>
-                            </div>
-                        </div>
-                    </article>
-                    
-                    <!-- Duft 2 -->
-                    <article class="product-card" data-id="terre-cuirvee">
-                        <div class="product-image" style="background-image: url('par2.jpg')"></div>
-                        <div class="product-info">
-                            <h3 class="product-name">Terre Cuivrée</h3>
-                            <p class="product-description">Sandelholz · Gewürz · Leder</p>
-                            <div class="product-footer">
-                                <span class="product-price">139,00€</span>
-                                <button class="btn add-to-cart">Zum Warenkorb</button>
-                            </div>
-                        </div>
-                    </article>
-                    
-                    <!-- Duft 3 -->
-                    <article class="product-card" data-id="oud-royal">
-                        <div class="product-image" style="background-image: url('par.jpg')"></div>
-                        <div class="product-info">
-                            <h3 class="product-name">Oud Royal</h3>
-                            <p class="product-description">Rosenholz · Safran · Moschus</p>
-                            <div class="product-footer">
-                                <span class="product-price">159,00€</span>
-                                <button class="btn add-to-cart">Zum Warenkorb</button>
-                            </div>
-                        </div>
-                    </article>
-                </div>
-            </div>
-        </section>
+  <footer>© 2025 Al-Safa Perfumes. Alle Rechte vorbehalten.</footer>
 
-        <!-- Handwerkskunst -->
-        <section id="handwerk" class="about-section">
-            <div class="about-content">
-                <h2 class="section-title">Das Handwerk</h2>
-                <p>Seit 1985 vereint AL-SAFA die alte Kunst der Parfümerie mit moderner Sensibilität. Jede Komposition entsteht durch die Hände unseres Meisterparfümeurs in Grasse.</p>
-                <p>Über 200 natürliche Essenzen aus allen Kontinenten finden ihren Weg in unsere Kreationen - jede Flasche ein Unikat.</p>
-                <a href="#handwerk" class="btn">Mehr erfahren</a>
-            </div>
-            <div class="about-image"></div>
-        </section>
-    </main>
+  <script>
+    const messages = [
+      "Wartungsarbeiten…",
+      "Wir sind bald wieder da…",
+      "Al-Safa Perfumes - Die Alchemie des Duftes",
+      "Verfeinerte Düfte, neu präsentiert…",
+      "Bleiben Sie gespannt auf unser Update!"
+    ];
 
-    <!-- Edler Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-grid">
-                <!-- Kollektionen -->
-                <div class="footer-column">
-                    <h4>Kollektionen</h4>
-                    <ul class="footer-links">
-                        <li><a href="#">Signature</a></li>
-                        <li><a href="#">Private Blend</a></li>
-                        <li><a href="#">Les Exclusifs</a></li>
-                        <li><a href="#">Archives</a></li>
-                    </ul>
-                </div>
-                
-                <!-- Service -->
-                <div class="footer-column">
-                    <h4>Service</h4>
-                    <ul class="footer-links">
-                        <li><a href="#">Beratung</a></li>
-                        <li><a href="#">Maßanfertigung</a></li>
-                        <li><a href="#">Geschenkservice</a></li>
-                        <li><a href="#">Pflegehinweise</a></li>
-                    </ul>
-                </div>
-                
-                <!-- Kontakt -->
-                <div class="footer-column">
-                    <h4>Atelier</h4>
-                    <ul class="contact-info">
-                        <li>
-                            <i class="fas fa-phone"></i>
-                            <span>+49 155 60569138</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-envelope"></i>
-                            <span>nassarmuhamad17@gmail.com</span>
-                        </li>
-                    </ul>
-                </div>
-                
-                <!-- Newsletter -->
-                <div class="footer-column">
-                    <h4>Verbunden bleiben</h4>
-                    <p>Abonnieren Sie unseren Newsletter für Einblicke in die Welt des Duftes.</p>
-                    <form class="newsletter-form">
-                        <input type="email" class="newsletter-input" placeholder="Ihre E-Mail" required>
-                        <button type="submit" class="newsletter-btn">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </form>
-                    <div class="social-links">
-                        <a href="https://www.instagram.com/al_safa_parfums?igsh=YWNyc3VwaHhlYTYy" aria-label="Instagram" target="_blank">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="copyright">
-                <p>&copy; 2025 AL-SAFA Parfumeur. Alle Rechte vorbehalten.</p>
-            </div>
-        </div>
-    </footer>
+    let index = 0;
+    const msgElement = document.getElementById("adMessage");
 
-    <!-- JavaScript -->
-    <script src="java.js"></script>
+    function updateMessage() {
+      msgElement.style.opacity = 0;
+      msgElement.style.transform = "translateY(10px)";
+      setTimeout(() => {
+        msgElement.textContent = messages[index];
+        msgElement.style.animation = "none";
+        void msgElement.offsetWidth; // reset animation
+        msgElement.style.animation = "fadeSlide 0.5s ease forwards";
+        index = (index + 1) % messages.length;
+      }, 300);
+    }
+
+    setInterval(updateMessage, 3000);
+
+    // 💠 Partikel-Animation: Parfümflaschen
+    const particleContainer = document.getElementById('particles');
+    const perfumeURL = "par.jpg"; // Parfümflasche Icon
+
+    for (let i = 0; i < 20; i++) {
+      const img = document.createElement("img");
+      img.src = perfumeURL;
+      img.className = "particle";
+      img.style.left = Math.random() * 100 + "vw";
+      img.style.animationDuration = (10 + Math.random() * 10) + "s";
+      img.style.animationDelay = (Math.random() * 5) + "s";
+      particleContainer.appendChild(img);
+    }
+  </script>
 </body>
 </html>
